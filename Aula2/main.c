@@ -38,9 +38,5 @@ int main(){
     *pab = b;
     b = aux;
     printf("\nEndereço Ponteiro = %p | Contéudo da Variável B (Trocado Com A) usando *pab = %d \n", &pab, *pab);
-
-    // ----
-
-    // Exercício 2
     return 0;
 }
