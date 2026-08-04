@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main(){
-    
+    // Exercício 1
     // Variável de Idades
     int a, b, s;
     a = 10, b = 20;
@@ -39,5 +39,8 @@ int main(){
     b = aux;
     printf("\nEndereço Ponteiro = %p | Contéudo da Variável B (Trocado Com A) usando *pab = %d \n", &pab, *pab);
 
+    // ----
+
+    // Exercício 2
     return 0;
 }
