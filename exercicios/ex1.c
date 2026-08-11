@@ -23,4 +23,6 @@ int main(){
     printf("O Float %f Ocupa na Memória %ld Bytes \n", exemploFloat, sizeof(exemploFloat));
     printf("O Double %f Ocupa na Memória %ld Bytes \n", exemploDouble, sizeof(exemploDouble));
     printf("O Long Double %Lf Ocupa na Memória %ld Bytes \n", exemploLongDouble, sizeof(exemploLongDouble));
+
+    return 0;
 }
