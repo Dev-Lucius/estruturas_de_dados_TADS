@@ -27,4 +27,6 @@ int main(){
     printf("Endereço de X = %p \n", &x);
     printf("Endereço de Y = %p \n", &y);
     printf("Endereço de Z = %p \n", &z);
+
+    return 0;
 }
