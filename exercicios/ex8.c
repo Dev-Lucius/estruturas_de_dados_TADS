@@ -33,6 +33,6 @@ int main(){
     
     printf("Soma Total (Referenciada em C): %f \n", c);
 
-    return 0;
     free(ps);
+    return 0;
 }
