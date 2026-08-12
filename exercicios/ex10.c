@@ -29,5 +29,6 @@ int main(){
         printf("Vetor[%d] = %d \n", i, vet[i]);
     }
 
+    free(vet);
     return 0;
 }
