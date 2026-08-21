@@ -19,6 +19,7 @@ Crie dois ponteiros de apartamentos, utilize alocação dinâmica (malloc). Apó
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Struct do Apartamento
 typedef struct {
@@ -68,6 +69,11 @@ Apartamento* criarNovoApartamento(char *condominio, int num, int andar, int qtd_
     ap->v_condominio = v_condomio;
 
     return ap;
+}
+
+// 5. Função para Alterar o valor do Aluguel de um Apartamento (Passagem por Referência)
+void alterarValorAluguel(Apartamento *ap, double valorAluguel){
+    ap->v_aluguel = valorAluguel;
 }
 
 int main() {
@@ -136,6 +142,24 @@ int main() {
     printf("=== DADOS DO AP 401 === \n\n");
     ap401 = criarNovoApartamento("Residencia do Norte", 76, 10, 5, 3, 500.00, 750.00);
     mostrarDadosApartamento(*ap401);
+
+    printf("Antes da Alteração \n");
+    printf("Aluguel do AP 101 = %.2f \n", ap101.v_aluguel);
+    printf("Aluguel do AP 102 = %.2f \n", ap201.v_aluguel);
+    printf("Aluguel do AP 102 = %.2f \n", ap301->v_aluguel);
+    printf("Aluguel do AP 102 = %2.f \n", ap401->v_aluguel);
+
+    // Após a Alteração
+    alterarValorAluguel(&ap101, 500.00);
+    alterarValorAluguel(&ap201, 600.00);
+    alterarValorAluguel(ap301, 700.00); // Já é ponteiro
+    alterarValorAluguel(ap401, 800.00); // Já é ponteiro
+
+    printf("Após da Alteração \n");
+    printf("Aluguel do AP 101 = %.2f \n", ap101.v_aluguel);
+    printf("Aluguel do AP 102 = %.2f \n", ap201.v_aluguel);
+    printf("Aluguel do AP 102 = %.2f \n", ap301->v_aluguel);
+    printf("Aluguel do AP 102 = %.2f \n", ap401->v_aluguel);
 
     return 0;
 }
