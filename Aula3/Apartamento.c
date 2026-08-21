@@ -15,7 +15,15 @@ Crie dois ponteiros de apartamentos, utilize alocação dinâmica (malloc). Apó
 - Defina um função para criar um novo apartamento, a função recebe por parâmetro os dados do apartamento 
   (Condomínio, andar, número, etc) e retorna o ponteiro do novo apartamento (atribua ao 401);
 -  Mostre os dados do apartamento 401 criado
-*/
+
+
+3° Parte 
+Defina dois Propriétarios aos Apartamentos 101 e 201
+- Implemente a função Mostrar Proprietário
+-  Aloque espaço para um novo proprietário (use Malloc), e troque o dono do apartamento 101 para o novo proprietário.
+  * Use o Malloc
+
+  */
 
 #include <stdio.h>
 #include <string.h>
@@ -27,6 +35,13 @@ typedef struct {
     int num, andar, qtd_comodos, box;
     double v_aluguel, v_condominio;
 } Apartamento;
+
+// Struct do Proprietário
+typedef struct{
+    int cod;
+    char nome[50];
+    Apartamento ap;
+} Proprietario;
 
 // 1. Função para imprimir (passagem por valor)
 void mostrarDadosApartamento(Apartamento ap) {
@@ -74,6 +89,14 @@ Apartamento* criarNovoApartamento(char *condominio, int num, int andar, int qtd_
 // 5. Função para Alterar o valor do Aluguel de um Apartamento (Passagem por Referência)
 void alterarValorAluguel(Apartamento *ap, double valorAluguel){
     ap->v_aluguel = valorAluguel;
+}
+
+// 6. Função para Mostrar Proprietario
+void mostrarProprietario(Proprietario p){
+    printf(" === DADOS DO PROPRIETÁRIO === \n");
+    printf("Proprietário = %s \n", p.nome);
+    printf("Apartamento = %s \n", p.ap.condominio);
+    printf("Numero do Apartamento = %d \n", p.ap.num);
 }
 
 int main() {
@@ -160,6 +183,22 @@ int main() {
     printf("Aluguel do AP 102 = %.2f \n", ap201.v_aluguel);
     printf("Aluguel do AP 102 = %.2f \n", ap301->v_aluguel);
     printf("Aluguel do AP 102 = %.2f \n", ap401->v_aluguel);
+
+    // Proprietário !!
+    Proprietario p1;
+    Proprietario p2;
+
+    p1.cod = 1;
+    strcpy(p1.nome, "Antonio Lima");
+    p1.ap = ap101;
+
+    p2.cod = 2;
+    strcpy(p2.nome, "Andressa Lopes");
+    p2.ap = ap201;
+
+    // Mostrando os Proprietário
+    mostrarProprietario(p1);
+    mostrarProprietario(p2);
 
     return 0;
 }
