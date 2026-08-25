@@ -244,6 +244,34 @@ int main() {
     printf("Mesmo endereco? %s\n\n",
            (bloco[0].dono == bloco[1].dono) ? "SIM!" : "NAO");
 
+    // Criando um Bloco com 8 Apartamentos
+    Apartamento aps[8];
+
+    aps[0] = ap101;
+    aps[1] = ap201;
+    aps[2] = *ap301;
+    aps[3] = *ap401;
+    
+    // Zera o resto para não ter lixo
+    // memset -> é uma função da linguagem C usada para preencher um bloco de memória 
+    //           com um valor específico, byte a byte
+    for (int i = 4; i < 8; i++) {
+        memset(&aps[i], 0, sizeof(Apartamento));  // preenche com zeros
+        aps[i].dono = NULL;   // importante: ponteiro nulo, não lixo!
+    }
+
+    // Agora pode mostrar todos em loop seguro
+    for (int i = 0; i < 8; i++) {
+        mostrarDadosApartamento(aps[i]);
+    }
+
+    // Mais Simples
+    mostrarDadosApartamento(aps[0]);
+    mostrarDadosApartamento(aps[1]);
+    mostrarDadosApartamento(aps[2]);
+    mostrarDadosApartamento(aps[3]);
+
+
     free(ap301);
     free(ap401);
     free(antonio);
