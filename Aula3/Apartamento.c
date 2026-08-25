@@ -108,10 +108,6 @@ void venderApartamento(Apartamento *ap, Proprietario *pr, int d, int m, int a) {
     printf("Apartamento %d vendido para %s em %02d/%02d/%d\n\n", ap->num, pr->nome, d, m, a);
 }
 
-/* ============================================================
- *  MAIN
- * ============================================================ */
-
 int main() {
 
     Proprietario *antonio = (Proprietario *)malloc(sizeof(Proprietario));
@@ -130,9 +126,6 @@ int main() {
     strcpy(carlos->nome, "Carlos Souza");
     strcpy(carlos->cpf, "111.222.333-44");
 
-    /* --------------------------------------------------------
-     *  1a PARTE: Apartamentos 101 e 201 (na stack)
-     * -------------------------------------------------------- */
     Apartamento ap101;
     strcpy(ap101.condominio, "Residencial Central");
     ap101.num = 101;
