@@ -299,7 +299,6 @@ int main(){
                 printf("Digite o numero da poltrona (0 a 14) \n");
                 scanf("%d", &pos);
                 
-                // CORREÇÃO 3: passando Sessao* em vez de Sala*
                 comprarPoltrona(&sessoes[idSessao], pos);
 
                 printf("\nATUALIZAÇÃO\n");
