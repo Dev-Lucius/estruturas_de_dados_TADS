@@ -39,7 +39,6 @@
 typedef struct no {
     int valor;
     struct no *proximo;
-
 } No;
 
 
@@ -54,11 +53,8 @@ typedef struct no {
  */
 
 typedef struct lse {
-
     No *primeiro;
-
     int n_elementos;
-
 } LSE;
 
 
@@ -69,13 +65,11 @@ typedef struct lse {
  * ============================================================
  */
 
-
 /*
  * ------------------------------------------------------------
  * 3.1) INSERIR NO INICIO
  * ------------------------------------------------------------
  */
-
 void inserirNoInicio(LSE *lista, No *novoNo) {
     novoNo->proximo = lista->primeiro;
     lista->primeiro = novoNo;
@@ -88,7 +82,6 @@ void inserirNoInicio(LSE *lista, No *novoNo) {
  * 3.2) INSERIR NO FIM
  * ------------------------------------------------------------
  */
-
 void inserirNoFim(LSE *lista, No *novoNo) {
     novoNo->proximo = NULL;
     // Caso a lista esteja vazia
@@ -120,58 +113,8 @@ void inserirNoFim(LSE *lista, No *novoNo) {
  * ------------------------------------------------------------
  * 3.3) INSERIR ORDENADO
  * ------------------------------------------------------------
- *
- * ATENCAO:
- *
- * Esta funcao e uma das partes que voce devera adaptar.
- *
- * Diferentemente da versao anterior, agora nao teremos
- * uma "posicao".
- *
- * O novo elemento deve ser inserido de acordo com o
- * seu valor, mantendo a lista em ordem crescente.
- *
- * Os valores repetidos devem continuar existindo.
- *
- * Exemplo:
- *
- * Lista:
- *
- * 10 -> 20 -> 20 -> 40
- *
- * Inserindo:
- *
- * 30
- *
- * Resultado:
- *
- * 10 -> 20 -> 20 -> 30 -> 40
- *
- * ------------------------------------------------------------
- */
-
-void inserirOrdenado(LSE *lista, No *novoNo) {
-
-    /*
-     * IMPLEMENTE ESTA FUNCAO
-     *
-     * Dica:
-     *
-     * 1) Verifique se a lista esta vazia;
-     *
-     * 2) Verifique se o novo elemento deve ficar
-     *    antes do primeiro;
-     *
-     * 3) Caso contrario, percorra a lista utilizando
-     *    um ponteiro auxiliar;
-     *
-     * 4) Encontre a posicao correta;
-     *
-     * 5) Conecte o novo elemento;
-     *
-     * 6) Atualize n_elementos.
-     */
-}
+*/
+void inserirOrdenado(LSE *lista, No *novoNo) {}
 
 
 /*
@@ -180,7 +123,6 @@ void inserirOrdenado(LSE *lista, No *novoNo) {
  * ============================================================
  */
 
-
 /*
  * ------------------------------------------------------------
  * 4.1) REMOVER NO INICIO
@@ -188,32 +130,21 @@ void inserirOrdenado(LSE *lista, No *novoNo) {
  */
 
 No *removerNoInicio(LSE *lista) {
-
     // Verifica se a lista esta vazia
-
     if (lista->primeiro == NULL) {
-
         return NULL;
     }
-
-    /*
-     * Guarda o primeiro elemento.
-     */
-
+    
+    // Guarda o primeiro elemento.
     No *removido = lista->primeiro;
-
     
     // O segundo elemento passa a ser o primeiro.
-    
-
     lista->primeiro = removido->proximo;
-
+    
     // Desconecta o elemento removido.
-
     removido->proximo = NULL;
 
     // Atualiza a quantidade de elementos.
-
     lista->n_elementos--;
     return removido;
 }
@@ -228,43 +159,30 @@ No *removerNoInicio(LSE *lista) {
 No *removerNoFim(LSE *lista) {
 
     // Caso 1 --> Lista vazia
-
     if (lista->primeiro == NULL) {
-
         return NULL;
     }
 
 
     // Caso 2 --> A lista possui apenas UM elemento
-
     if (lista->primeiro->proximo == NULL) {
-
         No *removido = lista->primeiro;
-
         lista->primeiro = NULL;
-
         lista->n_elementos--;
-
         return removido;
     }
 
-
     // Caso 3 --> A lista possui DOIS ou MAIS elementos
-
     No *anterior = NULL;
     No *atual = lista->primeiro;
 
     // Percorremos a lista ate chegar no ultimo elemento.
-
     while (atual->proximo != NULL) {
-
         anterior = atual;
-
         atual = atual->proximo;
     }
 
     // O PENULTIMO elemento vira o ULTIMO.
-
     anterior->proximo = NULL;
     lista->n_elementos--;
     return atual;
@@ -296,34 +214,7 @@ No *removerNoFim(LSE *lista) {
  * ------------------------------------------------------------
  */
 
-No *removerValor(LSE *lista, int valor) {
-
-    /*
-     * IMPLEMENTE ESTA FUNCAO
-     *
-     * Dica:
-     *
-     * 1) Verifique se a lista esta vazia;
-     *
-     * 2) Verifique se o primeiro elemento possui
-     *    o valor procurado;
-     *
-     * 3) Caso contrario, utilize dois ponteiros:
-     *
-     *    anterior
-     *    atual
-     *
-     * 4) Percorra a lista procurando o valor;
-     *
-     * 5) Desconecte o elemento encontrado;
-     *
-     * 6) Atualize n_elementos;
-     *
-     * 7) Retorne o elemento removido;
-     *
-     * 8) Caso o valor nao seja encontrado, retorne NULL.
-     */
-}
+No *removerValor(LSE *lista, int valor) {}
 
 
 /*
@@ -382,7 +273,6 @@ int obterMaior(LSE *lista) {
  * 5.3) MEDIA ARITMETICA
  * ------------------------------------------------------------
  */
-
 double calcularMedia(LSE *lista) {
 
     /*
