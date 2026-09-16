@@ -84,6 +84,26 @@ void inserirNaPosicao(LSE *ls, Aluno *novo, int pos) {
     ls->n_elementos++;
 }
 
+void inserirOrdenado(LSE *ls, No *novo) {
+    // Caso 1: lista vazia ou novo vem antes do primeiro
+    if (ls->primeiro == NULL || novo->valor < ls->primeiro->valor) {
+        inserirNoInicio(ls, novo);
+        return;
+    }
+    // Caso 2: procurar a posição correta
+    No *aux = ls->primeiro;
+
+    while (aux->proximo != NULL && aux->proximo->valor < novo->valor) {
+
+        aux = aux->proximo;
+    }
+    // Inserir entre aux e aux->proximo
+    novo->proximo = aux->proximo;
+    aux->proximo = novo;
+
+    ls->n_elementos++;
+}
+
 // ---------- Remoção ----------
 
 Aluno* removerNoInicio(LSE *ls) {
@@ -144,6 +164,37 @@ Aluno* removerNaPosicao(LSE *ls, int pos) {
     removido->proximo = NULL;
     ls->n_elementos--;
     return removido;  // quem chama deve dar apagaAluno() depois
+}
+
+Aluno* removerValor(LSE *ls, int valor) {
+    // Caso 1: lista vazia
+    if (ls->primeiro == NULL) {
+        return NULL;
+    }
+    // Caso 2: o primeiro possui o valor
+    if (ls->primeiro->valor == valor) {
+        return removerNoInicio(ls);
+    }
+
+    // Caso 3: procurar o valor
+    Aluno *anterior = ls->primeiro;
+    Aluno *atual = ls->primeiro->proximo;
+
+    while (atual != NULL) {
+
+        if (atual->valor == valor) {
+            // "Pula" o elemento removido
+            anterior->proximo = atual->proximo;
+            // Desconecta o elemento da lista
+            atual->proximo = NULL;
+            ls->n_elementos--;
+            return atual;
+        }
+        anterior = atual;
+        atual = atual->proximo;
+    }
+    // Valor não encontrado
+    return NULL;
 }
 
 // ---------- Exibição ----------
