@@ -25,7 +25,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <math.h>
+#include <time.h>
 
 /*
  * ============================================================
@@ -35,23 +36,19 @@
  * para o proximo elemento.
  * ============================================================
  */
-
 typedef struct no {
     int valor;
     struct no *proximo;
 } No;
 
-
 /*
  * ============================================================
  * 2) IMPLEMENTANDO A ESTRUTURA DE LISTA SIMPLESMENTE
  * ENCADEADA
- *
  * - Armazena o primeiro elemento;
  * - Armazena a quantidade de elementos inseridos.
  * ============================================================
  */
-
 typedef struct lse {
     No *primeiro;
     int n_elementos;
@@ -63,34 +60,30 @@ typedef struct lse {
  * 3) IMPLEMENTANDO AS FUNCOES DE INSERCAO E REMOCAO
  * DA LSE
  * ============================================================
- */
-
-/*
  * ------------------------------------------------------------
  * 3.1) INSERIR NO INICIO
  * ------------------------------------------------------------
  */
+
 void inserirNoInicio(LSE *lista, No *novoNo) {
     novoNo->proximo = lista->primeiro;
     lista->primeiro = novoNo;
     lista->n_elementos++;
 }
 
-
 /*
  * ------------------------------------------------------------
  * 3.2) INSERIR NO FIM
  * ------------------------------------------------------------
  */
+
 void inserirNoFim(LSE *lista, No *novoNo) {
     novoNo->proximo = NULL;
     // Caso a lista esteja vazia
-
     if (lista->primeiro == NULL) {
         lista->primeiro = novoNo;
 
     } else {
-
         No *aux = lista->primeiro;
         /*
          * Percorremos a lista ate encontrar
@@ -100,7 +93,6 @@ void inserirNoFim(LSE *lista, No *novoNo) {
 
             aux = aux->proximo;
         }
-
         // O ultimo elemento passa a apontar
         // para o novo elemento.
         aux->proximo = novoNo;
@@ -113,34 +105,49 @@ void inserirNoFim(LSE *lista, No *novoNo) {
  * ------------------------------------------------------------
  * 3.3) INSERIR ORDENADO
  * ------------------------------------------------------------
-*/
-void inserirOrdenado(LSE *lista, No *novoNo) {}
+ */
+
+void inserirOrdenado(LSE *lista, No *novoNo) {
+    // Caso 1: Lista Vazia ou Novo vem Antes do Primeiro
+    if((lista->primeiro == NULL) || (novoNo->valor < lista->primeiro->valor)){
+        inserirNoInicio(lista, novoNo);
+        return;
+    }
+    // Caso 2: Procurar a Posição Correta
+    No *aux = lista->primeiro;
+
+    while((aux->proximo != NULL) && (aux->proximo->valor < novoNo->valor)){
+        aux = aux->proximo;
+    }
+
+    // Inserir Entre aux e aux->proximo
+    novoNo->proximo = aux->proximo;
+    aux->proximo = novoNo;
+    lista->n_elementos++;
+}
 
 
 /*
  * ============================================================
  * 4) IMPLEMENTANDO AS FUNCOES DE REMOCAO
  * ============================================================
- */
-
-/*
  * ------------------------------------------------------------
  * 4.1) REMOVER NO INICIO
  * ------------------------------------------------------------
- */
+*/
 
 No *removerNoInicio(LSE *lista) {
     // Verifica se a lista esta vazia
     if (lista->primeiro == NULL) {
         return NULL;
     }
-    
-    // Guarda o primeiro elemento.
+    /*
+     * Guarda o primeiro elemento.
+     */
     No *removido = lista->primeiro;
-    
+
     // O segundo elemento passa a ser o primeiro.
     lista->primeiro = removido->proximo;
-    
     // Desconecta o elemento removido.
     removido->proximo = NULL;
 
@@ -157,13 +164,11 @@ No *removerNoInicio(LSE *lista) {
  */
 
 No *removerNoFim(LSE *lista) {
-
     // Caso 1 --> Lista vazia
     if (lista->primeiro == NULL) {
+
         return NULL;
     }
-
-
     // Caso 2 --> A lista possui apenas UM elemento
     if (lista->primeiro->proximo == NULL) {
         No *removido = lista->primeiro;
@@ -181,7 +186,6 @@ No *removerNoFim(LSE *lista) {
         anterior = atual;
         atual = atual->proximo;
     }
-
     // O PENULTIMO elemento vira o ULTIMO.
     anterior->proximo = NULL;
     lista->n_elementos--;
@@ -193,42 +197,46 @@ No *removerNoFim(LSE *lista) {
  * ------------------------------------------------------------
  * 4.3) REMOVER POR VALOR
  * ------------------------------------------------------------
- *
- * Esta funcao tambem devera ser implementada por voce.
- *
- * A ideia sera procurar um elemento pelo seu valor
- * e remove-lo da lista.
- *
- * Exemplo:
- *
- * Lista:
- *
- * 10 -> 20 -> 30 -> 40
- *
- * removerValor(&lista, 30)
- *
- * Resultado:
- *
- * 10 -> 20 -> 40
- *
- * ------------------------------------------------------------
  */
 
-No *removerValor(LSE *lista, int valor) {}
+No *removerValor(LSE *lista, int valor) {
+    // Caso 1: Lista Vazia
+    if(lista->primeiro == NULL){
+        return NULL;
+    }
+
+    // Caso 2: O primeiro possui o valor desejado
+    if(lista->primeiro->valor == valor){
+        return removerNoInicio(lista);
+    }
+
+    // Caso 3: O valor está em uma posição específica da Lista
+    No *anterior = lista->primeiro;
+    No *atual = lista->primeiro->proximo;
+
+    while(atual != NULL){
+        // Ao encontrar o valor desejado ...
+        if(atual->valor == valor){
+            // Primeiro "Pulamos" o elemento removido
+            anterior->proximo = atual->proximo;
+
+            // A seguir, removemos o elemento em questão;
+            atual->proximo = NULL;
+            lista->n_elementos--;
+            return atual;
+        }
+        anterior = atual;
+        atual = atual->proximo;
+    }
+    return NULL;
+}
 
 
 /*
  * ============================================================
  * 5) FUNCOES PARA ANALISE ESTATISTICA
  * ============================================================
- *
- * ESTAS FUNCOES SERAO IMPLEMENTADAS POR VOCE.
- *
- * O objetivo e praticar a percorrida da LSE.
- *
- * ------------------------------------------------------------
  */
-
 
 /*
  * ------------------------------------------------------------
@@ -237,17 +245,13 @@ No *removerValor(LSE *lista, int valor) {}
  */
 
 int obterMenor(LSE *lista) {
+    // Lista Vazia --> Não há menor Valor
+    if(lista->primeiro == NULL){
+        return -1;
+    }
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * Como a lista estara ordenada, pense em qual
-     * elemento ja representa o menor valor.
-     */
+    return lista->primeiro->valor;
 }
-
 
 /*
  * ------------------------------------------------------------
@@ -257,14 +261,17 @@ int obterMenor(LSE *lista) {
 
 int obterMaior(LSE *lista) {
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * A lista esta ordenada.
-     * Percorra ate encontrar o ultimo elemento.
-     */
+    if(lista->primeiro == NULL){
+        return -1;
+    }
+
+    No *aux = lista->primeiro;
+
+    while(aux->proximo != NULL){
+        aux = aux->proximo;
+    }
+    
+    return aux->valor;
 }
 
 
@@ -273,17 +280,21 @@ int obterMaior(LSE *lista) {
  * 5.3) MEDIA ARITMETICA
  * ------------------------------------------------------------
  */
+
 double calcularMedia(LSE *lista) {
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * - Percorra todos os elementos;
-     * - Some os valores;
-     * - Divida pela quantidade de elementos.
-     */
+    if(lista->n_elementos == 0){
+        return 0.0;
+    }
+
+    double soma = 0.0;
+    No *aux = lista->primeiro;
+    while(aux != NULL){
+        soma += aux->valor;
+        aux = aux->proximo;
+    }
+    // Retorando a Média
+    return soma / lista->n_elementos;
 }
 
 
@@ -295,24 +306,20 @@ double calcularMedia(LSE *lista) {
 
 double calcularDesvioPadrao(LSE *lista, double media) {
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * Utilize a media calculada anteriormente.
-     *
-     * Para cada elemento:
-     *
-     * diferenca = valor - media
-     *
-     * Depois:
-     *
-     * diferenca * diferenca
-     *
-     * Some todos os resultados e aplique a formula
-     * do desvio padrao.
-     */
+    if(lista->n_elementos == 0){
+        return 0.0;
+    }
+
+    double somaQuadrados = 0.0;
+    No *aux = lista->primeiro;
+
+    while(aux != NULL){
+        double diferenca = (aux->valor) - media;
+        somaQuadrados += diferenca * diferenca;
+        aux = aux->proximo; 
+    }
+
+    return sqrt(somaQuadrados / lista->n_elementos);
 }
 
 
@@ -324,21 +331,17 @@ double calcularDesvioPadrao(LSE *lista, double media) {
 
 int contarRepetidos(LSE *lista) {
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * Como a lista esta ordenada, elementos repetidos
-     * estarao lado a lado.
-     *
-     * Exemplo:
-     *
-     * 10 -> 20 -> 20 -> 30
-     *
-     * A comparacao entre um elemento e seu proximo
-     * pode ajudar.
-     */
+    int repetidos;
+    No *aux = lista->primeiro;
+
+    while((aux != NULL) && (aux->proximo != NULL)){
+        if(aux->valor == aux->proximo->valor){
+            repetidos++;
+        }
+        aux = aux->proximo;
+    }
+
+    return repetidos;
 }
 
 
@@ -346,33 +349,29 @@ int contarRepetidos(LSE *lista) {
  * ============================================================
  * 6) EXIBICAO FORMATADA
  * ============================================================
- *
- * Imprimir a lista no formato:
- *
- * 50 linhas x 20 colunas
- *
- * Total:
- *
- * 50 * 20 = 1000 elementos
- *
- * ------------------------------------------------------------
  */
 
 void exibirMatriz(LSE *lista) {
+    const int LINHAS = 50;
+    const int COLUNAS = 20;
 
-    /*
-     * IMPLEMENTE
-     *
-     * Dica:
-     *
-     * Utilize dois loops:
-     *
-     * for das linhas
-     * for das colunas
-     *
-     * Para cada posicao, avance o ponteiro
-     * para o proximo elemento.
-     */
+    No *aux=lista->primeiro;
+
+    for(int i = 0; i < LINHAS; i++){
+        for(int j = 0; j < COLUNAS; j++){
+            // Se a lista estiver com menos de 1000 Elementos
+            // A impressão é interrompida
+            if(aux == NULL){
+                printf("\n");
+                return;
+            }
+            printf("%4d ", aux->valor);
+            // Avançamos para o Próx Elemento
+            aux = aux->proximo;
+        }
+        // Fim da Linha
+        printf("\n");
+    }
 }
 
 
@@ -388,6 +387,106 @@ void exibirMatriz(LSE *lista) {
  */
 
 void liberarLista(LSE *lista) {
+    No *atual = lista->primeiro;
 
+    while(atual != NULL){
+        No *proximo = atual->proximo; // Guarda o proximo ANTES do free
+        free(atual); // Libera o Nó Atual
+        atual = proximo; // Avança para o Próximo
+    }
+
+    // Deixa a lista em estado consistente (vazia)
+    lista->primeiro = NULL;
+    lista->n_elementos = 0;
 }
 
+int main(){
+
+    /* 
+      - Inicializando a Lista
+    */
+    LSE listinha;
+    listinha.primeiro = NULL;
+    listinha.n_elementos = 0;
+
+    /*
+      - Geração e Inserção ordenada de 1000 Numeros
+    */
+    srand(time(NULL)); // Para cada execução, vamos mudar a sequencia
+
+    for(int i = 0; i < 1000; i++){
+
+        No *novo = (No*) malloc(sizeof(No));
+        if(novo == NULL){
+            printf("Erro: falha na alocação de memoria! \n");
+            liberarLista(&listinha);
+            return 1;
+        }
+
+        novo->valor = rand() % 1001; // Gerando Valores de úl0 a 1000 (Incluindo 1000)
+        novo->proximo = NULL;
+        inserirOrdenado(&listinha, novo);
+    }
+    printf("Elementos Inseridos: %d \n", listinha.n_elementos);
+
+    /*
+      - Exibição da Lista (50 x 20)
+    */
+    printf("\n --- LISTA ORDENADA (50 x 20) --- \n");
+    exibirMatriz(&listinha);
+
+    /*
+      - Analise Estatistica
+    */
+    int menor = obterMenor(&listinha);
+    int maior = obterMaior(&listinha);
+    double media = calcularMedia(&listinha);
+    double desvio = calcularDesvioPadrao(&listinha, media);
+    int repetidos = contarRepetidos(&listinha);
+
+    printf("\n=== ANALISE ESTATISTICA ===\n");
+    printf("Menor valor: %d\n", menor);
+    printf("Maior valor: %d\n", maior);
+    printf("Media: %.2f\n", media);
+    printf("Desvio padrao: %.2f\n", desvio);
+    printf("Repetidos: %d\n", repetidos);
+
+    /*
+      - Testes de Remoções
+      - OBS: Todo nó removido precisa de free() por quem chamou
+    */
+    printf("\n=== TESTE DE REMOCOES ===\n");
+
+    No *removido = removerNoInicio(&listinha);
+    if (removido != NULL) {
+        printf("Removido no inicio: %d\n", removido->valor);
+        free(removido);
+    }
+
+    removido = removerNoFim(&listinha);
+    if (removido != NULL) {
+        printf("Removido no fim   : %d\n", removido->valor);
+        free(removido);
+    }
+
+    int alvo = 500;
+    removido = removerValor(&listinha, alvo);
+    if (removido != NULL) {
+        printf("Removido o valor %d\n", removido->valor);
+        free(removido);
+    } else {
+        printf("Valor %d nao encontrado na lista\n", alvo);
+    }
+
+    printf("Elementos restantes: %d\n", listinha.n_elementos);
+    printf("\n=== LISTA APOS REMOCOES ===\n");
+    exibirMatriz(&listinha);
+
+    /*
+      - Liberação de Memória
+    */
+    liberarLista(&listinha);
+    printf("\nMemória Liberada. Fim\n");
+
+    return 0;
+}
