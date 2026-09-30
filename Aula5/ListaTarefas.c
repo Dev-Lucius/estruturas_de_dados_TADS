@@ -271,7 +271,7 @@ void mostraListaDE(LDE lt)
         printf("\n Início da Lista!");
         while (aux != NULL)
         {
-            printf("\n Elemento N° %d", ct--); // CORRIGIDO: era ct++ (numeracao crescia em vez de cair)
+            printf("\n Elemento N° %d", ct--); 
             mostraTarefa(*aux);
             aux = aux->anterior;
         }
