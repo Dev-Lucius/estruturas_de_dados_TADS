@@ -47,6 +47,7 @@ LDE *criaListaLDE(char nome[])
 void insereInicio(LDE *lt, Tarefa *tf)
 {
     // Insere um elemento no inicio da lista LDE
+    printf("\nInserindo no Inicio");
     tf->anterior = NULL;
     if (lt->primeiro == NULL)
     {
@@ -65,6 +66,7 @@ void insereInicio(LDE *lt, Tarefa *tf)
 void insereFim(LDE *lt, Tarefa *tf){
     tf->proximo = NULL;
 
+    printf("\nInserindo no Fim");
     if(lt->primeiro == NULL){
         insereInicio(lt, tf);
     } else {
@@ -130,6 +132,7 @@ Tarefa *removeFim(LDE *lt){
 
     Tarefa *removido = lt->ultimo;
     lt->ultimo = removido->anterior;
+    mostraTarefa(*removido);
 
     if(lt->ultimo == NULL){
         lt->primeiro == NULL;
@@ -201,7 +204,7 @@ void mostraListaDE(LDE lt)
     // Mostrar Lista da Direita para Esquerda - do elemento último ao primeiro elemento
     printf("\n ---------- Lista de %s ------------------\n", lt.nome);
     Tarefa *aux = lt.ultimo;
-    int ct = 0;
+    int ct = lt.num -1;
     if (aux == NULL)
         printf("\n LISTA VAZIA!");
     else
@@ -245,7 +248,7 @@ void menu(LDE *lt)
     Tarefa *aux = NULL;
     do
     {
-        printf("\n 1 - Insere no Inicio");apagaLista(lt);
+        printf("\n 1 - Insere no Inicio");
         printf("\n 2 - Insere no Fim");
         printf("\n 3 - Insere na Posição");
         printf("\n 4 - Remove no Inicio");
@@ -274,18 +277,18 @@ void menu(LDE *lt)
         case 4:
             aux = removeInicio(lt);
             (aux != NULL) ? mostraTarefa(*aux) : printf(" ");
-            free(aux);
+            // free(aux);
             break;
         case 5:
             aux = removeFim(lt);
             (aux != NULL) ? mostraTarefa(*aux) : printf(" ");
-            free(aux);
+            // free(aux);
             break;
         case 6:
             printf("\n Remove na Informe a Posicao: ");
             scanf("%d", &posicao);
              aux = removePosicao(lt,posicao);
-            free(aux);
+            // free(aux);
             break;
         case 7:
             printf("\n Informe a Posicao");
