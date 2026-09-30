@@ -172,7 +172,7 @@ Tarefa *removeFim(LDE *lt)
 
     if (lt->ultimo == NULL)
     {
-        lt->primeiro = NULL; "
+        lt->primeiro = NULL; 
     }
     else
     {
