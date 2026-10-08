@@ -7,18 +7,18 @@
 // gcc codigo.c -o codigo
 // ./codigo
 
-typedef struct Motor{
+typedef struct Motor {
     int nrmMotor;
     int potencia;
     char combustivel[10];
 } Motor;
 
-typedef struct Rodas{
+typedef struct Rodas {
     int diametro;
     char nrmRoda[10];
 } Rodas;
 
-typedef struct Carro{
+typedef struct Carro {
     int nrmChassi;
     char modelo[30];
     char cor[10];
@@ -26,122 +26,114 @@ typedef struct Carro{
     Rodas rd[4];
 } Carro;
 
+// Copia texto respeitando o tamanho do destino (evita overflow)
+static void copiarTexto(char *dest, size_t tam, const char *orig) {
+    snprintf(dest, tam, "%s", orig);
+}
 
 // Registrar Motor
-void registrarMotor(Motor *mtr, int numMotor, int pot, char combust[10]){
-    if(mtr == NULL){
-        fprintf(stderr, "Error \n");
+void registrarMotor(Motor *mtr, int numMotor, int pot, const char *combust) {
+    if (mtr == NULL) {
+        fprintf(stderr, "Erro: motor NULL\n");
         return;
     }
 
     mtr->nrmMotor = numMotor;
     mtr->potencia = pot;
-    strcpy(mtr->combustivel, combust);
+    copiarTexto(mtr->combustivel, sizeof(mtr->combustivel), combust);
 }
 
 // Registrar Roda
-void registrarRoda(Rodas *rod, int diam, char numRoda[10]){
-    if(rod == NULL){
-        fprintf(stderr, "Error \n");
+void registrarRoda(Rodas *rod, int diam, const char *numRoda) {
+    if (rod == NULL) {
+        fprintf(stderr, "Erro: roda NULL\n");
         return;
     }
 
-    rod->diametro=diam;
-    strcpy(rod->nrmRoda, numRoda);
+    rod->diametro = diam;
+    copiarTexto(rod->nrmRoda, sizeof(rod->nrmRoda), numRoda);
 }
 
-// Registrar Carro
-void registrarCarro(Carro *cr, int numChassi, char modCarro[30], char corCarro[10], Motor motCarro, Rodas rodCarro){
-    
-    if(cr == NULL){
-        fprintf(stderr, "Error \n");
+// Registrar Carro (recebe as 4 rodas)
+void registrarCarro(Carro *cr, int numChassi, const char *modCarro,
+                    const char *corCarro, Motor motCarro, Rodas rodasCarro[4]) {
+    if (cr == NULL) {
+        fprintf(stderr, "Erro: carro NULL\n");
         return;
     }
 
     cr->nrmChassi = numChassi;
-    strcpy(cr->modelo, modCarro);
-    strcpy(cr->cor, corCarro);
+    copiarTexto(cr->modelo, sizeof(cr->modelo), modCarro);
+    copiarTexto(cr->cor, sizeof(cr->cor), corCarro);
     cr->mt = motCarro;
-    cr->rd[0] = rodCarro;
-    cr->rd[1] = rodCarro;
-    cr->rd[2] = rodCarro;
-    cr->rd[3] = rodCarro;
+
+    for (int i = 0; i < 4; i++) {
+        cr->rd[i] = rodasCarro[i];
+    }
 }
 
 // Instalar Motor no Carro
-void instalarMotorCarro(Carro *cr, Motor mtr){
-    if(cr == NULL){
-        fprintf(stderr, "Error \n");
+void instalarMotorCarro(Carro *cr, Motor mtr) {
+    if (cr == NULL) {
+        fprintf(stderr, "Erro: carro NULL\n");
         return;
     }
     cr->mt = mtr;
 }
 
-// Instalar Roda no Carro
-void instalarRodaCarro(Carro *cr, Rodas rods){
-    if(cr == NULL){
-        fprintf(stderr, "Error \n");
+// Instalar uma Roda em uma posição do Carro (0 a 3)
+void instalarRodaCarro(Carro *cr, Rodas rod, int posicao) {
+    if (cr == NULL) {
+        fprintf(stderr, "Erro: carro NULL\n");
         return;
     }
 
-    if(sizeof(cr->rd) < 4){
-        printf("Carro Não Possui 4 Rodas");
+    if (posicao < 0 || posicao >= 4) {
+        fprintf(stderr, "Erro: posicao de roda invalida (%d)\n", posicao);
+        return;
     }
 
-    cr->rd[0] = rods;
-    cr->rd[1] = rods;
-    cr->rd[2] = rods;
-    cr->rd[3] = rods;
+    cr->rd[posicao] = rod;
 }
 
-// Mostrar Carro
-void mostrarCarro(Carro carro){
-    printf("Número do Chassi: %d\n", carro.nrmChassi);
-    printf("Modelo do Carro: %s\n", carro.modelo);
-    printf("Cor do Carro: %s\n", carro.cor);
-    printf("Potencia do Motor do Carro: %d\n", carro.mt.potencia);
-    printf("Numero das Rodas do Carro: %s\n", carro.rd->nrmRoda);
+// Mostrar Carro (ponteiro const evita copiar a struct inteira)
+void mostrarCarro(const Carro *carro) {
+    printf("Numero do Chassi: %d\n", carro->nrmChassi);
+    printf("Modelo do Carro: %s\n", carro->modelo);
+    printf("Cor do Carro: %s\n", carro->cor);
+    printf("Potencia do Motor: %d\n", carro->mt.potencia);
+    printf("Combustivel: %s\n", carro->mt.combustivel);
+
+    for (int i = 0; i < 4; i++) {
+        printf("Roda %d: %s (diametro %d)\n",
+               i + 1, carro->rd[i].nrmRoda, carro->rd[i].diametro);
+    }
+    printf("\n");
 }
 
-int main(){
+int main() {
 
-    struct Rodas roda;
-    roda.diametro = 10;
-    strcpy(roda.nrmRoda, "R13");
+    Motor m1;
+    registrarMotor(&m1, 17, 750, "Gasolina");
 
-    struct Motor m1;
-    m1.nrmMotor = 17;
-    m1.potencia = 750;
-    strcpy(m1.combustivel, "Gasolina");
+    Rodas jogoRodas[4];
+    for (int i = 0; i < 4; i++) {
+        registrarRoda(&jogoRodas[i], 10, "R13");
+    }
 
-    struct Carro c1;
-    c1.nrmChassi = 25;
-    strcpy(c1.modelo, "Hilux");
-    strcpy(c1.cor, "Preto");
-    c1.mt = m1;
-    c1.rd[0] = roda;
-    c1.rd[1] = roda;
-    c1.rd[2] = roda;
-    c1.rd[3] = roda;
+    Carro c1, c2, c3;
+    registrarCarro(&c1, 25, "Hilux", "Preto", m1, jogoRodas);
+    registrarCarro(&c2, 26, "Civic", "Branco", m1, jogoRodas);
+    registrarCarro(&c3, 27, "Ferrari", "Vermelha", m1, jogoRodas);
 
-    struct Carro c2;
-    c2.nrmChassi = 25;
-    strcpy(c2.modelo, "Civic");
-    strcpy(c2.cor, "Branco");
-    c2.mt = m1;
-    c2.rd[0] = roda;
-    c2.rd[1] = roda;
-    c2.rd[2] = roda;
-    c2.rd[3] = roda;
+    // Exemplo: trocar a roda da posição 0 do c3
+    Rodas rodaNova;
+    registrarRoda(&rodaNova, 12, "R15");
+    instalarRodaCarro(&c3, rodaNova, 0);
 
-    struct Carro c3;
-    registrarCarro(c3, 25, "Ferrari", "Vermelha", m1, roda);
-
-    mostrarCarro(c1);
-    mostrarCarro(c2);
-    mostrarCarro(c3);
+    mostrarCarro(&c1);
+    mostrarCarro(&c2);
+    mostrarCarro(&c3);
 
     return 0;
 }
-
-
