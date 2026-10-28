@@ -7,6 +7,8 @@
  *  - Função troca o 5° elemento da fila para o fim da fila;
  *  - Função inverte fila, inverte todos elementos da fila;
  *  - Após cada função mostre a lista atualizada.
+ * 
+ * Compilar: gcc FilaExercicios.c -o FilaExercicios
 */
 
 #include <stdio.h>
@@ -71,6 +73,19 @@ void enfileira(Fila *fl, Cliente *c) {
     }
     fl->fim = c;
     fl->qtd++;
+}
+
+Cliente *desenfileirar(Fila *fl){
+    if (fl == NULL || fl->inicio == NULL)
+        return NULL;
+
+    Cliente *aux = fl->inicio;
+    fl->inicio = aux->proximo;
+    aux->proximo = NULL;
+    fl->qtd--;
+    if (fl->inicio == NULL) // a fila ficou vazia
+        fl->fim = NULL;
+    return aux;
 }
 
 /**
@@ -176,7 +191,7 @@ Fila *copiaFila(const Fila *original){
 
 /**
  * Ex04
- *  - Troca o elemento da posição n (1 = primeiro) para o fim da fil
+ *  - Troca o elemento da posição n (1 = primeiro) para o fim da fila
 */
 void trocaPosicaoParaFim(Fila *fl, int n) {
     if (fl == NULL || n < 1 || n > fl->qtd) {
@@ -184,7 +199,7 @@ void trocaPosicaoParaFim(Fila *fl, int n) {
         return;
     }
     if (n == 1) {
-        primeiroParaFim(fl);
+        PrimeiroParaFim(fl);
         return;
     }
 
@@ -199,13 +214,18 @@ void trocaPosicaoParaFim(Fila *fl, int n) {
         anterior = anterior->proximo;
     }
 
-    // n-ésimo cliente
-    Cliente *c = anterior->proximo;
+    // Obtém o cliente que será movido para o final da fila.
+    // Ele está logo após o nó apontado por "anterior".
+    Cliente *c = anterior->proximo;  
 
-    // "costura" a fila sem ele    
+    // Retira o cliente da posição atual, ligando o nó anterior
+    // diretamente ao próximo cliente.
+    // Em seguida desconecta ele do resto da fila 
     anterior->proximo = c->proximo;     
     c->proximo = NULL;
 
+    // o ultimo aponta para o cliente movido
+    // atualiza o ponteiro "fim"
     fl->fim->proximo = c;
     fl->fim = c;
 }
@@ -238,6 +258,39 @@ void invertaFila(Fila *fl) {
     fl->inicio = anterior;              // o antigo último será o primeiro
 }
 
+void inverterFilaAlternativo(Fila *fl) {
+    if (fl == NULL || fl->qtd < 2) {
+        return;                         // nada a inverter
+    }
+ 
+    Fila *copia = criaFila();
+    if (copia == NULL) {
+        return;                        
+    }
+ 
+    Cliente *aux = fl->inicio;
+    while (aux != NULL) {
+        // guarda o próximo ANTES de alterar aux->proximo
+        Cliente *prox = aux->proximo;  
+        // Insere aux no INÍCIO da copia (e não no fim, como faria o enfileira)
+        aux->proximo = copia->inicio;
+        copia->inicio = aux;
+        if (copia->fim == NULL) {       // o primeiro cliente movido será o fim da copia
+            copia->fim = aux;
+        }
+        copia->qtd++;
+        aux = prox;                     // avança na fila original
+    }
+ 
+    // A copia agora está na ordem inversa: a fila original assume essa ordem
+    fl->inicio = copia->inicio;
+    fl->fim = copia->fim;
+    fl->qtd = copia->qtd;
+ 
+    free(copia);    // libera SÓ a estrutura Fila: os clientes agora pertencem a fl
+}
+
+
 int main() {
     Fila *fila = criaFila();
  
@@ -251,7 +304,7 @@ int main() {
  
     mostraFila(fila, "Fila original");
  
-    primeiroParaFim(fila);
+    PrimeiroParaFim(fila);
     mostraFila(fila, "1) Primeiro foi para o fim");
  
     ultimoParaInicio(fila);
@@ -266,6 +319,9 @@ int main() {
  
     invertaFila(fila);
     mostraFila(fila, "5) Fila invertida");
+
+    inverterFilaAlternativo(fila);
+    mostraFila(fila, "6) Fila Invertida Alternativa");
  
     // A cópia continua intacta, pois é independente da original
     mostraFila(copia, "Copia (nao foi afetada)");
