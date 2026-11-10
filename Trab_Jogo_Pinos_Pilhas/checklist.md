@@ -7,9 +7,9 @@
 ## 0. Antes de começar
 
 - [x] Reler o PDF inteiro e sublinhar os requisitos obrigatórios
-- [ ] Confirmar com o professor a **condição de vitória** (4 pilhas com 3 pinos da mesma cor cada, temporários vazios?)
-- [ ] Confirmar se pode usar **vários arquivos** (`.h`/`.c`) ou se precisa ser arquivo único
-- [ ] Confirmar se a pilha deve seguir o modelo visto em aula (vetor ou encadeada)
+- [x] Confirmar com o professor a **condição de vitória** (4 pilhas com 3 pinos da mesma cor cada, temporários vazios?)
+- [x] Confirmar se pode usar **vários arquivos** (`.h`/`.c`) ou se precisa ser arquivo único
+- [x] Confirmar se a pilha deve seguir o modelo visto em aula (vetor ou encadeada)
 - [x] Escolher o compilador/IDE e testar um "Hello World" (`gcc -Wall -Wextra`)
 - [x] Criar a pasta do projeto e (opcional) um repositório Git
 
