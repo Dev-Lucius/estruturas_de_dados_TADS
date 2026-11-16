@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
+#include <string.h>
 
 #define NUM_PILHAS 4
 #define NUM_TEMPS 2
@@ -94,6 +96,54 @@ const char *nomeCor(Cor cor){
         default: return "Vazio";
     }
 }
+
+// Ler um numero inteiro digitado pelo jogador
+int lerInteiro(const char *mensagem, long *valor) {
+
+    char linha[100];
+    char *fim;
+
+    printf("%s", mensagem);
+
+    // Verificando se a leitura foi realizada
+    if (fgets(linha, sizeof(linha), stdin) == NULL) {
+        return 0;
+    }
+
+    // Verificando se a linha ultrapassou o buffer
+    if (strchr(linha, '\n') == NULL && !feof(stdin)) {
+        int caractere;
+
+        while ((caractere = getchar()) != '\n' && caractere != EOF);
+
+        return -1;
+    }
+
+    // Convertendo texto para numero
+    errno = 0;
+    long numero = strtol(linha, &fim, 10);
+
+    // Verificando se a conversao falhou
+    if (fim == linha || errno == ERANGE) {
+        return -1;
+    }
+
+    // Ignorando espacos e quebras de linha
+    while (*fim == ' ' || *fim == '\t' ||
+           *fim == '\n' || *fim == '\r') {
+        fim++;
+    }
+
+    // Verificando caracteres adicionais
+    if (*fim != '\0') {
+        return -1;
+    }
+
+    *valor = numero;
+
+    return 1;
+}
+
 
 // Funções de Pilha
 // Criar Pilha
@@ -296,9 +346,10 @@ void exibirJogo(Jogo *jogo){
 
 // validarMovimento()
 int validarMovimento(Jogo *jogo, int origem, int destino){
-    if(jogo == NULL){
-        printf("\nJogo inválido");
-        return 0;
+    
+    if(jogo->slots[origem] == NULL || jogo->slots[destino] == NULL){
+    printf("\nPilha Não Existe!");
+    return 0;
     }
 
     // Validando os Indices
@@ -340,8 +391,9 @@ int validarMovimento(Jogo *jogo, int origem, int destino){
         return 0;
     }
 
-    if(vazia(jogo->slots[destino])){
-        printf("\nA Pilha de Destino esta vazia");
+    // Verificando se o Destino esta cheio
+    if(cheia(jogo->slots[destino])){
+        printf("\nA Pilha de Destino esta Cheia");
         return 0;
     }
     return 1;
@@ -360,15 +412,20 @@ int moverPino(Jogo *jogo, int origem, int destino){
     Pino *pn = pop(jogo->slots[origem]);
 
     if(pn == NULL){
+        printf("\nErro ao retirar o pino da origem!");
         return 0;
     }
 
     // Inserindo o pino no destino
     if(!push(jogo->slots[destino], pn)){
 
-        // Se houver falha, devolve o pino a origem
-        push(jogo->slots[origem], pn);
+        // Restaurando o pino na origem
+        if(!push(jogo->slots[origem], pn)){
+            printf("\nErro critico ao restaurar o pino!");
+            return -1;
+        }
 
+        printf("\nFalha ao inserir o pino no destino!");
         return 0;
     }
 
@@ -377,14 +434,16 @@ int moverPino(Jogo *jogo, int origem, int destino){
     return 1;
 }
 
-// Validando A Vitoria
-
+// função validarVitoria
 int validarVitoria(Jogo *jogo){
 
     // Verificando se o jogo existe
     if(jogo == NULL){
         return 0;
     }
+
+    // Registrando as cores encontradas
+    int coresEncontradas[5] = {0};
 
     // Verificando as quatro pilhas principais
     for(int i = 0; i < NUM_PILHAS; i++){
@@ -401,8 +460,30 @@ int validarVitoria(Jogo *jogo){
             return 0;
         }
 
-        // Todos os pinos devem possuir a mesma cor
+        // Verificando se todos os pinos possuem a mesma cor
         if(!pilha_uma_cor(p)){
+            return 0;
+        }
+
+        // Identificando a cor do topo
+        Cor cor = cor_do_topo(p);
+
+        // Verificando se a cor e valida
+        if(cor < VERMELHO || cor > AMARELO){
+            return 0;
+        }
+
+        // Impedindo duas pilhas da mesma cor
+        if(coresEncontradas[cor]){
+            return 0;
+        }
+
+        coresEncontradas[cor] = 1;
+    }
+
+    // Verificando se todas as quatro cores foram utilizadas
+    for(int i = VERMELHO; i <= AMARELO; i++){
+        if(!coresEncontradas[i]){
             return 0;
         }
     }
@@ -416,6 +497,7 @@ int validarVitoria(Jogo *jogo){
             return 0;
         }
     }
+
     return 1;
 }
 
@@ -450,15 +532,180 @@ int menuDificuldade(){
     }
 }
 
+
+// Executar a partida
+int executarJogo(Jogo *jogo){
+
+    // Verificando se o jogo existe
+    if(jogo == NULL){
+        printf("\nJogo invalido!");
+        return -1;
+    }
+
+    long opcao;
+    long origem;
+    long destino;
+
+    // Controlando o encerramento da partida
+    int encerramento = 0;
+
+    // Loop principal da partida
+    while(1){
+
+        // Verificando se o jogador venceu
+        if(validarVitoria(jogo)){
+            printf("\n\n========== VITORIA ==========");
+            printf("\nParabens! Voce organizou todos os pinos!");
+            break;
+        }
+
+        // Exibindo o tabuleiro atual
+        exibirJogo(jogo);
+
+        // Exibindo o menu de acoes
+        printf("\n========== MENU DO JOGO ==========");
+        printf("\n1 - Mover pino");
+        printf("\n0 - Encerrar partida");
+        printf("\n==================================\n");
+
+        // Recebendo uma opcao valida do jogador
+        int leitura;
+
+        do {
+
+            leitura = lerInteiro(
+                "\nEscolha uma opcao: ", &opcao
+            );
+
+            if(leitura == -1){
+                printf("\nOpcao invalida! Digite um numero.\n");
+            }
+
+        } while(leitura == -1);
+
+        // Verificando se a entrada foi encerrada
+        if(leitura == 0){
+            printf("\nEntrada encerrada.");
+            encerramento = 1;
+            break;
+        }
+
+        // Verificando a opcao escolhida
+        if(opcao == 0){
+
+            printf("\nEncerrando a partida...");
+            break;
+
+        } else if(opcao == 1){
+
+            // Recebendo a pilha de origem
+            leitura = lerInteiro(
+                "\nDigite a pilha de origem (1-6): ",
+                &origem
+            );
+
+            if(leitura == 0){
+                printf("\nEntrada encerrada.");
+                encerramento = 1;
+                break;
+            }
+
+            if(leitura == -1 || origem < 1 ||
+               origem > NUM_PILHAS + NUM_TEMPS){
+
+                printf("\nPilha de origem invalida!");
+                continue;
+            }
+
+            // Recebendo a pilha de destino
+            leitura = lerInteiro(
+                "Digite a pilha de destino (1-6): ",
+                &destino
+            );
+
+            if(leitura == 0){
+                printf("\nEntrada encerrada.");
+                encerramento = 1;
+                break;
+            }
+
+            if(leitura == -1 || destino < 1 ||
+               destino > NUM_PILHAS + NUM_TEMPS){
+
+                printf("\nPilha de destino invalida!");
+                continue;
+            }
+
+            // Convertendo os indices para o vetor slots
+            // O jogador digita de 1 a 6, mas o vetor usa 0 a 5
+            origem--;
+            destino--;
+
+            // Executando o movimento
+            int resultado = moverPino(
+                jogo, (int)origem, (int)destino
+            );
+
+            if(resultado == 1){
+
+                printf("\nMovimento realizado com sucesso!");
+                printf("\nTotal de movimentos: %d",
+                       jogo->movimentos);
+
+            } else if(resultado == -1){
+
+                printf("\nFalha critica ao restaurar o pino!");
+                encerramento = 1;
+                break;
+
+            } else {
+
+                printf("\nNao foi possivel realizar o movimento!");
+            }
+
+        } else {
+
+            printf("\nOpcao inexistente!");
+        }
+    }
+
+    // Calculando o tempo de partida
+    time_t fim = time(NULL);
+    double tempoTotal = difftime(fim, jogo->inicio);
+
+    long segundos = (long)tempoTotal;
+    long horas = segundos / 3600;
+    long minutos = (segundos % 3600) / 60;
+    long restante = segundos % 60;
+
+    // Exibindo as estatisticas finais
+    printf("\n\n========== RESULTADO ==========");
+    printf("\nMovimentos realizados: %d", jogo->movimentos);
+    printf("\nTempo de partida: %02ld:%02ld:%02ld",
+           horas, minutos, restante);
+    printf("\n===============================");
+
+    // Retornando o resultado da partida
+    if(validarVitoria(jogo)){
+        return 1;
+    }
+
+    return encerramento ? 0 : 0;
+}
+
+
+
 int main(){
 
     // Inicializando o gerador de numeros aleatorios
     srand(time(NULL));
 
+    // Criando a estrutura do jogo
     Jogo jogo;
 
     printf("\nBem-vindo ao Jogo de Pinos!\n");
 
+    // Selecionando a dificuldade
     int dificuldade = menuDificuldade();
 
     if(dificuldade == 0){
@@ -471,9 +718,9 @@ int main(){
         return 1;
     }
 
-    // Inicializando o jogo no nivel FACIL
+    // Inicializando o jogo
     if(!inicializarJogo(&jogo, dificuldade)){
-        printf("\nErro ao inicializar o jogo!");
+        printf("\nErro ao inicializar o jogo!\n");
         return 1;
     }
 
@@ -493,7 +740,6 @@ int main(){
 
         printf("\nErro ao distribuir os pinos!");
 
-        // Liberando a memoria alocada
         for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
             liberarPilha(jogo.slots[i]);
             jogo.slots[i] = NULL;
@@ -502,38 +748,16 @@ int main(){
         return 1;
     }
 
-    // Exibindo o tabuleiro inicial
-    exibirJogo(&jogo);
-
-    // Testando a movimentacao
-    printf("\n\n========== TESTE DE MOVIMENTO ==========");
-
-    if(moverPino(&jogo, 0, 1)){
-        printf("\nMovimento realizado com sucesso!");
-    } else {
-        printf("\nNao foi possivel realizar o movimento!");
-    }
-
-    // Contabilizando movimentos
-    printf("\nTotal de movimentos: %d", jogo.movimentos);
-
-    // Exibindo o tabuleiro atualizado
-    exibirJogo(&jogo);
-
-    printf("\n\n========== TESTE DE VITORIA ==========");
-
-    if(validarVitoria(&jogo)){
-        printf("\nParabens! Voce venceu!");
-    } else {
-        printf("\nA partida ainda nao terminou.");
-    }
+    // Executando a partida
+    executarJogo(&jogo);
 
     // Liberando a memoria
     for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
+
         liberarPilha(jogo.slots[i]);
+
         jogo.slots[i] = NULL;
     }
 
     return 0;
 }
-
