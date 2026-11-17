@@ -24,11 +24,12 @@
 - [Grafos](#-grafos)
 - [Complexidade de Algoritmos](#-complexidade-de-algoritmos)
 - [Como Compilar e Executar](#-como-compilar-e-executar)
+> **Dica:** Use este repositório como referência prática. Implemente cada estrutura do zero pelo menos uma vez — é a melhor forma de fixar o conteúdo para provas e projetos!
 - [Referências](#-referências)
 
 ---
 
-## 🎓 Sobre a Disciplina
+## Sobre a Disciplina
 
 Esta disciplina tem como objetivo apresentar as estruturas de dados fundamentais para a organização e manipulação eficiente de informações em memória, bem como os algoritmos clássicos de ordenação, pesquisa e travessia. O foco está na compreensão da complexidade computacional e na escolha adequada de estruturas para cada problema.
 
@@ -37,49 +38,7 @@ Esta disciplina tem como objetivo apresentar as estruturas de dados fundamentais
 
 ---
 
-## 📁 Estrutura do Repositório
-
-```
-estrutura-de-dados/
-├── README.md
-├── LICENSE
-├── Makefile
-├── docs/
-│   └── notas-de-aula.md
-├── src/
-│   ├── tad/
-│   │   ├── arranjo.c / arranjo.h
-│   │   ├── pilha.c / pilha.h
-│   │   ├── fila.c / fila.h
-│   │   ├── lista_encadeada.c / lista_encadeada.h
-│   │   └── tabela_dispersao.c / tabela_dispersao.h
-│   ├── ordenacao/
-│   │   ├── bubble_sort.c
-│   │   ├── selection_sort.c
-│   │   ├── insertion_sort.c
-│   │   ├── merge_sort.c
-│   │   ├── quick_sort.c
-│   │   └── heap_sort.c
-│   ├── pesquisa/
-│   │   ├── busca_linear.c
-│   │   └── busca_binaria.c
-│   ├── arvores/
-│   │   ├── arvore_binaria.c / arvore_binaria.h
-│   │   ├── arvore_binaria_busca.c / arvore_binaria_busca.h
-│   │   ├── arvore_avl.c / arvore_avl.h
-│   │   └── heap.c / heap.h
-│   └── grafos/
-│       ├── grafo_matriz.c / grafo_matriz.h
-│       ├── grafo_lista.c / grafo_lista.h
-│       └── algoritmos_grafo.c
-├── tests/
-│   └── testes_unitarios.c
-└── main.c
-```
-
----
-
-## 🧱 Tipos Abstratos de Dados (TADs)
+## Tipos Abstratos de Dados (TADs)
 
 Um **Tipo Abstrato de Dado (TAD)** define um modelo matemático junto com as operações que podem ser realizadas sobre ele, sem especificar a implementação interna. A interface é exposta via arquivo de cabeçalho (`.h`) e a implementação fica no arquivo fonte (`.c`).
 
@@ -181,6 +140,7 @@ Coleção de nós onde cada nó contém um dado e um ponteiro para o próximo n�
 
 ### Tabelas de Dispersão (Hash Tables)
 
+> **Dica:** Use este repositório como referência prática. Implemente cada estrutura do zero pelo menos uma vez — é a melhor forma de fixar o conteúdo para provas e projetos!
 Estrutura que mapeia chaves para valores usando uma **função hash** para determinar o índice de armazenamento.
 
 | Operação | Caso Médio | Pior Caso | Descrição |
@@ -208,7 +168,7 @@ Estrutura que mapeia chaves para valores usando uma **função hash** para deter
 
 ---
 
-## 🔀 Ordenação e Pesquisa
+## Ordenação e Pesquisa
 
 ### Métodos de Ordenação
 
@@ -258,7 +218,7 @@ int busca_binaria(int arr[], int n, int alvo) {
 
 ---
 
-## 🌳 Árvores
+## Árvores
 
 Estruturas hierárquicas onde cada nó possui zero ou mais filhos, com exatamente um nó raiz.
 
@@ -325,7 +285,7 @@ BST **auto-balanceada**. Para todo nó, a diferença de altura entre subárvores
 
 ---
 
-## 🕸️ Grafos
+## Grafos
 
 Conjunto de **vértices (nós)** e **arestas** que os conectam. Podem ser **direcionados** ou **não-direcionados**, **ponderados** ou **não-ponderados**.
 
@@ -378,7 +338,7 @@ Conjunto de **vértices (nós)** e **arestas** que os conectam. Podem ser **dire
 
 ---
 
-## ⏱️ Complexidade de Algoritmos
+## Complexidade de Algoritmos
 
 A **análise de complexidade** mede como o tempo de execução ou o espaço em memória de um algoritmo cresce em relação ao tamanho da entrada `n`.
 
@@ -425,7 +385,7 @@ Para recorrências da forma `T(n) = a·T(n/b) + f(n)`:
 
 ---
 
-## 🛠️ Como Compilar e Executar
+## Como Compilar e Executar
 
 ### Requisitos
 - GCC (GNU Compiler Collection) ou Clang
@@ -492,7 +452,7 @@ cppcheck --enable=all src/
 
 ---
 
-## 📖 Referências
+## Referências
 
 ### Livros
 - **Cormen, T. H.** et al. *Introduction to Algorithms* (CLRS). 4ª ed. MIT Press, 2022.
@@ -509,10 +469,6 @@ cppcheck --enable=all src/
 
 ---
 
-## 📝 Licença
+## Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
-
----
-
-> 💡 **Dica:** Use este repositório como referência prática. Implemente cada estrutura do zero pelo menos uma vez — é a melhor forma de fixar o conteúdo para provas e projetos!
