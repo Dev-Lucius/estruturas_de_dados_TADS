@@ -251,8 +251,9 @@ int inicializarJogo(Jogo *jogo, int nivel){
             return 0;
     }
 
+    // Inicializando os Ponteiros das Pilhas
     // Criando as Seis Pilhas
-    for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){]
+    for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
         jogo->slots[i] = NULL;
         
         int capacidade;
@@ -289,6 +290,7 @@ int inicializarJogo(Jogo *jogo, int nivel){
 // -> Algoritmo de Fisher-Yates
 void embaralhar(Cor pinos[], int quantidade){
     for(int i = quantidade - 1; i > 0; i--){
+        // Gerando uma posição aleatorio entre 0 e i
         int j = rand() % (i + 1);
 
         // troca os elementos na posição
@@ -599,12 +601,9 @@ int executarJogo(Jogo *jogo){
 
         // Verificando a opcao escolhida no menu
         if(opcao == 0){
-
             printf("\nEncerrando a partida...");
             break;
-
         } else if(opcao == 1){
-
             // Recebendo a pilha de origem
             leitura = lerInteiro("\nDigite a pilha de origem (1-6): ", &origem);
 
@@ -761,4 +760,3 @@ int main(){
 
     return 0;
 }
-
