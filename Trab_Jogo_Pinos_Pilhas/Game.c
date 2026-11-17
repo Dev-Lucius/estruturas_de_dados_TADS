@@ -14,7 +14,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+// Fornece funções para manipular hora e data
 #include <time.h>
+// Declara variavel global errno (do tipo int)
+// -> armazenar códigos de erro
 #include <errno.h>
 #include <string.h>
 
@@ -98,6 +101,7 @@ const char *nomeCor(Cor cor){
 }
 
 // Ler um numero inteiro digitado pelo jogador
+// A ideia é centralizar e padronizar a leitura de números digitados pelo jogador
 int lerInteiro(const char *mensagem, long *valor) {
 
     char linha[100];
@@ -106,6 +110,7 @@ int lerInteiro(const char *mensagem, long *valor) {
     printf("%s", mensagem);
 
     // Verificando se a leitura foi realizada
+    // fgets() --> Captura uma Linha completa
     if (fgets(linha, sizeof(linha), stdin) == NULL) {
         return 0;
     }
@@ -121,6 +126,7 @@ int lerInteiro(const char *mensagem, long *valor) {
 
     // Convertendo texto para numero
     errno = 0;
+    // strtol() -> conversão de conteúdo
     long numero = strtol(linha, &fim, 10);
 
     // Verificando se a conversao falhou
@@ -146,7 +152,7 @@ int lerInteiro(const char *mensagem, long *valor) {
 
 
 // Funções de Pilha
-// Criar Pilha
+// Responsável por alocar dinamicamente um novo nó do tipo pino
 Pilha *criarPilha(int capacidade){
     Pilha *p = (Pilha*) malloc(sizeof(Pilha));
     if(p == NULL){
@@ -160,6 +166,7 @@ Pilha *criarPilha(int capacidade){
 }
 
 // Criar um Pino
+// Criar uma Estrutura do Tipo Pilha
 Pino *criarPino(Cor cor){
     Pino *pn = (Pino*) malloc(sizeof(Pino));
     if(pn == NULL){
@@ -171,15 +178,18 @@ Pino *criarPino(Cor cor){
     return pn;
 }
 
+// Verifica se a Pilha não possui elementos 
 int vazia(Pilha *p){
     return p->topo == NULL;
 }
 
+// Verifica se a quantidade atual de elementos atingiu a capacidade máxima de Pilha
 int cheia(Pilha *p){
     return p->tamanho >= p->capacidade;
 }
 
-// push
+// push (empurrar)
+// Adicionar um novo elemento ao Topo
 int push(Pilha *p, Pino *pn){
     if(p == NULL || pn == NULL){
         printf("\n --- PUSH nao Realizado - Pilha ou Pino invalido!!");
@@ -195,7 +205,8 @@ int push(Pilha *p, Pino *pn){
     return 1;
 }
 
-// pop
+// pop (desempilhar)
+// remove e retorna o elemento do topo
 Pino *pop(Pilha *p){
     if(p == NULL || vazia(p)){
         printf("\n --- POP nao Realizado - Pilha Vazia Ou Invalida!!");
@@ -225,6 +236,7 @@ void liberarPilha(Pilha *p){
 }
 
 // Funções de Jogo
+// Responsável por separar as Estruturas necessárias para uma nova partida
 int inicializarJogo(Jogo *jogo, int nivel){
     if(jogo == NULL){
         return 0;
@@ -285,7 +297,7 @@ int inicializarJogo(Jogo *jogo, int nivel){
 }
 
 // embaralhar()
-// -> Fisher-Yates
+// -> Algoritmo de Fisher-Yates
 void embaralhar(Cor pinos[], int quantidade){
     for(int i = quantidade - 1; i > 0; i--){
         int j = rand() % (i + 1);
@@ -298,6 +310,7 @@ void embaralhar(Cor pinos[], int quantidade){
 }
 
 // distribuirPinos()
+// Função cuja responsabilidade por criar nós dos pinos e inseri-los nas pilhas principais 
 int distribuirPinos(Jogo *jogo, Cor pinos[]){
     if(jogo == NULL || pinos == NULL){
         return 0;
@@ -325,6 +338,7 @@ int distribuirPinos(Jogo *jogo, Cor pinos[]){
 }
 
 // exibirJogo()
+// Função que monta o Tabuleiro
 void exibirJogo(Jogo *jogo){
     if(jogo == NULL) return;
 
@@ -345,6 +359,7 @@ void exibirJogo(Jogo *jogo){
 }
 
 // validarMovimento()
+// Responsável por verificar se uma movimentação pode ser Realizada
 int validarMovimento(Jogo *jogo, int origem, int destino){
     
     if(jogo->slots[origem] == NULL || jogo->slots[destino] == NULL){
@@ -400,7 +415,7 @@ int validarMovimento(Jogo *jogo, int origem, int destino){
 }
 
 // MoverPino()
-
+// Responsável por executar efetivamente a movimentação
 int moverPino(Jogo *jogo, int origem, int destino){
 
     // Validando o movimento
