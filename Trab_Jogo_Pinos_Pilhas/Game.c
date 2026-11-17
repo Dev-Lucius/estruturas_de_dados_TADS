@@ -14,7 +14,7 @@
 
 #define NUM_PILHAS 4 // 4 Pilhas principais
 #define NUM_TEMPS 2 // 2 Pilhas Temporarias
-#define CAP_PILHA 4
+#define CAP_PILHA 4 // Capacidade Max da Pilha
 #define PINOS_POR_COR 3
 
 #define FACIL 1
