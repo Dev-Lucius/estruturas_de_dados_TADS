@@ -1,14 +1,3 @@
-/*
-
-- Trabalho Consiste Em:
-    12 pinos, 4 cores: 3 pinos de cada cor.
-    4 pilhas (P1–P4), capacidade 4 cada, mais 2 temporários (capacidade 1 cada).
-    Início aleatório: 3 pinos por pilha, embaralhados (sobra 1 espaço livre em cada pilha).
-    Objetivo: cada pilha com uma só cor.
-    3 níveis: Fácil (Temp1 + Temp2), Médio (só Temp1), Difícil (sem temporários).
-    Obrigatório: validar movimentos, validar fim de jogo, contar tempo (time()) e/ou movimentos, interface em terminal.
-*/
-
 // Compilação do Código
 // - Compilando o Codigo em C usando o padrão C11
 // - Ele avisa sobre qualquer suspeita de Warning ou Falhas de Memoria
