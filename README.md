@@ -1,4 +1,4 @@
-# 📚 Estrutura de Dados
+# Estrutura de Dados
 
 > Repositório de estudos e implementações da disciplina de **Estrutura de Dados**, cobrindo Tipos Abstratos de Dados, algoritmos de ordenação e pesquisa, árvores, grafos e análise de complexidade.
 
@@ -7,7 +7,7 @@
 
 ---
 
-## 📋 Índice
+## Índice
 
 - [Sobre a Disciplina](#-sobre-a-disciplina)
 - [Estrutura do Repositório](#-estrutura-do-repositório)
