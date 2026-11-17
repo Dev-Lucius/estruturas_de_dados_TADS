@@ -42,7 +42,7 @@ typedef struct {
 } Pilha;
 
 typedef struct {
-    Pilha *slots[NUM_PILHAS + NUM_TEMPS];
+    Pilha *slots[NUM_PILHAS + NUM_TEMPS]; // vetor de ponteiros para Pilhas
     int temps_ativos;
     int movimentos;
     time_t inicio;
@@ -251,13 +251,10 @@ int inicializarJogo(Jogo *jogo, int nivel){
             return 0;
     }
 
-    // Inicializando os Ponteiros das Pilhas
-    for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
-        jogo->slots[i] = NULL;
-    }
-
     // Criando as Seis Pilhas
-    for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
+    for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){]
+        jogo->slots[i] = NULL;
+        
         int capacidade;
 
         if(i < NUM_PILHAS){
