@@ -81,6 +81,7 @@ Cor cor_na_posicao(Pilha *p, int pos) {
     return atual->cor;
 }
 
+// Se todos os elementos da Pilha possuem a mesma cor
 int pilha_uma_cor(Pilha *p){
     if(p->topo == NULL) return 0;
     
