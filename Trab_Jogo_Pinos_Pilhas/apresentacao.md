@@ -351,15 +351,8 @@ A movimentação é uma das partes centrais do projeto.
 
 Para garantir que as regras sejam respeitadas, foram desenvolvidas as funções:
 
-- `pilhaDisponivel()`
 - `validarMovimento()`
 - `moverPino()`
-
-### `pilhaDisponivel()`
-
-Verifica se uma pilha pode ser utilizada durante a partida.
-
-As pilhas principais estão sempre disponíveis, enquanto as temporárias dependem do nível de dificuldade escolhido.
 
 ### `validarMovimento()`
 
