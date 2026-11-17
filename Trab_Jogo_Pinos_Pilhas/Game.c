@@ -10,6 +10,8 @@
 */
 
 // Compilação do Código
+// - Compilando o Codigo em C usando o padrão C11
+// - Ele avisa sobre qualquer suspeita de Warning ou Falhas de Memoria
 // gcc -Wall -Wextra -std=c11 -g -fsanitize=address,undefined Game.c -o Game
 
 #include <stdio.h>
