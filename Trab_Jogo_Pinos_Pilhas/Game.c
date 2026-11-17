@@ -21,8 +21,8 @@
 #include <errno.h>
 #include <string.h>
 
-#define NUM_PILHAS 4
-#define NUM_TEMPS 2
+#define NUM_PILHAS 4 // 4 Pilhas principais
+#define NUM_TEMPS 2 // 2 Pilhas Temporarias
 #define CAP_PILHA 4
 #define PINOS_POR_COR 3
 
@@ -450,6 +450,11 @@ int moverPino(Jogo *jogo, int origem, int destino){
 }
 
 // função validarVitoria
+// um jogador vence quando:
+// - as quatro pilhas principais possuem exatamente tres pinos
+// - Cada pilha principal tem apenas uma cor
+// - as quatro pilhas apresentam cores distintas
+// - as pilhas temporárias estavam vazias
 int validarVitoria(Jogo *jogo){
 
     // Verificando se o jogo existe
@@ -516,7 +521,7 @@ int validarVitoria(Jogo *jogo){
     return 1;
 }
 
-// menu de dificuldade
+// menu de dificuldade que aparece antes de iniciar a partida
 int menuDificuldade(){
 
     int opcao;
@@ -557,12 +562,10 @@ int executarJogo(Jogo *jogo){
         return -1;
     }
 
-    long opcao;
-    long origem;
-    long destino;
-
-    // Controlando o encerramento da partida
-    int encerramento = 0;
+    long opcao; // opcao escolhida pelo jogador
+    long origem; // armazena a pilha de onde o pino será retirado
+    long destino; // armazena a pilha que receberá o pino
+    int encerramento = 0; // Controlando o encerramento da partida
 
     // Loop principal da partida
     while(1){
@@ -577,7 +580,7 @@ int executarJogo(Jogo *jogo){
         // Exibindo o tabuleiro atual
         exibirJogo(jogo);
 
-        // Exibindo o menu de acoes
+        // Exibindo o menu de acoes equanto o jogo ainda não acabar
         printf("\n========== MENU DO JOGO ==========");
         printf("\n1 - Mover pino");
         printf("\n0 - Encerrar partida");
@@ -586,8 +589,8 @@ int executarJogo(Jogo *jogo){
         // Recebendo uma opcao valida do jogador
         int leitura;
 
+        // repete a leitura enquanto o valor for inválido!
         do {
-
             leitura = lerInteiro(
                 "\nEscolha uma opcao: ", &opcao
             );
@@ -605,7 +608,7 @@ int executarJogo(Jogo *jogo){
             break;
         }
 
-        // Verificando a opcao escolhida
+        // Verificando a opcao escolhida no menu
         if(opcao == 0){
 
             printf("\nEncerrando a partida...");
@@ -614,29 +617,24 @@ int executarJogo(Jogo *jogo){
         } else if(opcao == 1){
 
             // Recebendo a pilha de origem
-            leitura = lerInteiro(
-                "\nDigite a pilha de origem (1-6): ",
-                &origem
-            );
+            leitura = lerInteiro("\nDigite a pilha de origem (1-6): ", &origem);
 
+            // Verifica se a Entrada foi encerrada
             if(leitura == 0){
                 printf("\nEntrada encerrada.");
                 encerramento = 1;
                 break;
             }
 
-            if(leitura == -1 || origem < 1 ||
-               origem > NUM_PILHAS + NUM_TEMPS){
-
+            // Verificando se a origem foi informada corretamente
+            // e se corresponde a uma das pilhas existentes
+            if(leitura == -1 || origem < 1 || origem > NUM_PILHAS + NUM_TEMPS){
                 printf("\nPilha de origem invalida!");
                 continue;
             }
 
             // Recebendo a pilha de destino
-            leitura = lerInteiro(
-                "Digite a pilha de destino (1-6): ",
-                &destino
-            );
+            leitura = lerInteiro("Digite a pilha de destino (1-6): ", &destino);
 
             if(leitura == 0){
                 printf("\nEntrada encerrada.");
@@ -644,9 +642,8 @@ int executarJogo(Jogo *jogo){
                 break;
             }
 
-            if(leitura == -1 || destino < 1 ||
-               destino > NUM_PILHAS + NUM_TEMPS){
-
+            // Verificando se o Destino foi informado corretamente
+            if(leitura == -1 || destino < 1 || destino > NUM_PILHAS + NUM_TEMPS){
                 printf("\nPilha de destino invalida!");
                 continue;
             }
@@ -657,37 +654,32 @@ int executarJogo(Jogo *jogo){
             destino--;
 
             // Executando o movimento
-            int resultado = moverPino(
-                jogo, (int)origem, (int)destino
-            );
+            // A funcao moverPino realiza as validacoes
+            // e manipula os nos das pilhas
+            int resultado = moverPino(jogo, (int)origem, (int)destino);
 
+            // Verificando o Resultado dos Movimentos
             if(resultado == 1){
-
                 printf("\nMovimento realizado com sucesso!");
-                printf("\nTotal de movimentos: %d",
-                       jogo->movimentos);
+                printf("\nTotal de movimentos: %d", jogo->movimentos);
 
             } else if(resultado == -1){
-
                 printf("\nFalha critica ao restaurar o pino!");
                 encerramento = 1;
                 break;
-
             } else {
-
                 printf("\nNao foi possivel realizar o movimento!");
             }
-
         } else {
-
             printf("\nOpcao inexistente!");
         }
     }
 
     // Calculando o tempo de partida
-    time_t fim = time(NULL);
-    double tempoTotal = difftime(fim, jogo->inicio);
+    time_t fim = time(NULL); // horario atual
+    double tempoTotal = difftime(fim, jogo->inicio); // calcula a diferença entre dois horarios
 
+    // conversões
     long segundos = (long)tempoTotal;
     long horas = segundos / 3600;
     long minutos = (segundos % 3600) / 60;
@@ -710,6 +702,7 @@ int executarJogo(Jogo *jogo){
 
 
 
+
 int main(){
 
     // Inicializando o gerador de numeros aleatorios
@@ -723,23 +716,25 @@ int main(){
     // Selecionando a dificuldade
     int dificuldade = menuDificuldade();
 
+    // Verificando se o jogador deseja sair
     if(dificuldade == 0){
         printf("\nEncerrando o jogo...\n");
         return 0;
     }
 
+    // Verificando se a dificuldade e valida
     if(dificuldade == -1){
         printf("\nOpcao invalida!\n");
         return 1;
     }
 
-    // Inicializando o jogo
+    // Inicializando as pilhas e configurando a partida
     if(!inicializarJogo(&jogo, dificuldade)){
         printf("\nErro ao inicializar o jogo!\n");
         return 1;
     }
 
-    // Criando o vetor de pinos
+    // Criando o vetor com tres pinos de cada cor
     Cor pinos[NUM_PILHAS * PINOS_POR_COR] = {
         VERMELHO, VERMELHO, VERMELHO,
         VERDE, VERDE, VERDE,
@@ -750,11 +745,12 @@ int main(){
     // Embaralhando os pinos
     embaralhar(pinos, NUM_PILHAS * PINOS_POR_COR);
 
-    // Distribuindo os pinos
+    // Distribuindo os pinos nas pilhas principais
     if(!distribuirPinos(&jogo, pinos)){
 
         printf("\nErro ao distribuir os pinos!");
 
+        // Liberando as pilhas em caso de falha
         for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
             liberarPilha(jogo.slots[i]);
             jogo.slots[i] = NULL;
@@ -763,10 +759,10 @@ int main(){
         return 1;
     }
 
-    // Executando a partida
+    // Iniciando a partida
     executarJogo(&jogo);
 
-    // Liberando a memoria
+    // Liberando a memoria de todas as pilhas
     for(int i = 0; i < NUM_PILHAS + NUM_TEMPS; i++){
 
         liberarPilha(jogo.slots[i]);
@@ -776,3 +772,4 @@ int main(){
 
     return 0;
 }
+
